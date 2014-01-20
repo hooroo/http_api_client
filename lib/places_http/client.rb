@@ -30,13 +30,13 @@ module PlacesHttp
       get("#{base_path}", query)
     end
 
-    def get(base_path, query = nil)
+    def get(base_path, query = {}, headers = {})
 
       path = full_path(base_path, query)
       log_request('GET', path)
 
       response = connection.get(path) do |request|
-        request.headers['Accept'] = 'application/json'
+        request.headers.merge({'Accept' => 'application/json'}).merge(headers)
       end
 
       handle_response(response, :get, path)

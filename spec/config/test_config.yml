@@ -1,5 +1,5 @@
-
 test:
-  server: test-server
-  port: test-port
-  base_uri: test-base-uri
+  my_client:
+    server: test-server
+    port: test-port
+    base_uri: test-base-uri
