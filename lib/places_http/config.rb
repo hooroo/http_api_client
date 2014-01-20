@@ -7,14 +7,9 @@ require 'places_http'
 module PlacesHttp
   class Config
 
-    # attr_reader :server, :port, :base_uri
-
-    def initialize(config_file)
+    def initialize(config_file = 'config/http_clients.yml')
       if File.exists?(config_file)
-
         @config = symbolize_keys(YAML.load_file(config_file)[PlacesHttp.env])
-
-
       else
         raise "Could not load config file: #{config_file}"
       end
@@ -25,7 +20,6 @@ module PlacesHttp
     attr_reader :config
 
     def method_missing(method, *args, &block)
-      # require 'pry'; binding.pry
       if config[method]
         OpenStruct.new(config[method])
       else

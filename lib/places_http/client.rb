@@ -12,10 +12,17 @@ module PlacesHttp
 
     include PlacesHttp::Errors::Factory
 
-    attr_reader :config
+    attr_reader :client_id
 
-    def initialize(config)
-      @config = config
+    def initialize(client_id, config_file = nil)
+      raise "You must supply a http client config id (as defined in config/http_clients.yml" unless client_id
+      @client_id = client_id
+
+      if config_file
+        @config = Config.new(config_file)
+      else
+        @config = Config.new
+      end
     end
 
     def find(base_path, id, query = {})
@@ -64,6 +71,14 @@ module PlacesHttp
 
     private
 
+    def config
+      @config.send(client_id)
+    end
+
+    def auth_params
+      {}
+    end
+
     def handle_response(response, method, path)
       if ok?(response) || validation_failed?(response)
         if response.body
@@ -97,9 +112,12 @@ module PlacesHttp
       Integer(response.status) == 422
     end
 
-    def full_path(path, query = nil)
+    def full_path(path, query = {})
+
+      query_with_auth = query.merge(auth_params)
+
       path = "/#{config.base_uri}/#{path}".gsub(/\/+/, '/')
-      path = "#{path}?#{query.to_query}" if query && query.keys.size > 0
+      path = "#{path}?#{query_with_auth.to_query}" if query_with_auth && query_with_auth.keys.size > 0
       path
     end
 

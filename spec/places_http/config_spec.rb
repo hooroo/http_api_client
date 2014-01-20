@@ -17,7 +17,7 @@ module PlacesHttp
 
     context "with a valid config file" do
 
-      let(:config_file) { 'spec/config/test_config.yml' }
+      let(:config_file) { 'spec/config/http_clients.yml' }
 
       it 'loads the config for the environment' do
         expect(config.my_client.server).to eql 'test-server'
