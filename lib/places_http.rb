@@ -1,4 +1,7 @@
 require "places_http/version"
+require "places_http/errors"
+require "places_http/config"
+require "places_http/client"
 
 module PlacesHttp
 
