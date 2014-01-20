@@ -1,0 +1,5 @@
+
+test:
+  server: test-server
+  port: test-port
+  base_uri: test-base-uri
