@@ -7,7 +7,9 @@ require 'places_http'
 module PlacesHttp
   class Config
 
-    def initialize(config_file = 'config/http_clients.yml')
+    DEFAULT_CONFIG_FILE_LOCATION = 'config/http_clients.yml'
+
+    def initialize(config_file = DEFAULT_CONFIG_FILE_LOCATION)
       if File.exists?(config_file)
         @config = symbolize_keys(config_for(config_file, PlacesHttp.env))
       else

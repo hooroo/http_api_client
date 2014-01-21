@@ -15,7 +15,7 @@ module PlacesHttp
     attr_reader :client_id
 
     def initialize(client_id, config_file = nil)
-      raise "You must supply a http client config id (as defined in config/http_clients.yml" unless client_id
+      raise "You must supply a http client config id (as defined in #{config_file || Config::DEFAULT_CONFIG_FILE_LOCATION}" unless client_id
       @client_id = client_id
 
       if config_file
@@ -152,7 +152,7 @@ module PlacesHttp
     end
 
     def log_request(method, path)
-      PlacesHttp.logger.info "api_client_base_uri=#{config.server}" #For splunk
+      PlacesHttp.logger.info "http_client_server_request=#{config.server}" #For splunk
       PlacesHttp.logger.info "Http Client: #{method} #{config.protocol}://#{config.server}#{path}"
     end
 
