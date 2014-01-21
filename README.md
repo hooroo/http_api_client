@@ -26,37 +26,21 @@ This will construct a http client configured as 'places_api' in the `config\http
 
 Eg:
 ```
-defaults: &defaults
-  places_api: &places_api_defaults
-    protocol: 'http'
-    base_uri: '/api/'
-
-development:
-  <<: *defaults
-  places_api:
-    <<: *places_api_defaults
-    server: localhost
-    port: 3001
-
 test:
-  <<: *defaults
-  places_api:
-    <<: *places_api_defaults
-    server: localhost
-    port: 3001
+  my_client:
+    protocol: 'http'
+    server: example.com
+    port: 80
+    base_uri: 'api/'
 
-staging:
-  <<: *defaults
-  places_api:
-    <<: *places_api_defaults
-    server: staging.api.places.hooroo.com
-
-production:
-  <<: *defaults
-  places_api:
-    <<: *places_api_defaults
-    server: api.places.hooroo.com
 
 ```
 
-By implementing your http clients as singletons, you can make the most of faraday's persistent http connections via net_http_persistent.
+By implementing your http clients as singletons, you can make the most of faraday's persistent http connections via net_http_persistent. This can have a significant impact on performance for chatty apps assuming that the target server implements keep-alive.
+
+### Specifiying Authentication Params
+
+
+
+
+

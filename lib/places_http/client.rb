@@ -43,7 +43,7 @@ module PlacesHttp
       log_request('GET', path)
 
       response = connection.get(path) do |request|
-        request.headers.merge({'Accept' => 'application/json'}).merge(headers)
+        request.headers.merge!({'Accept' => 'application/json'}).merge(headers)
       end
 
       handle_response(response, :get, path)
@@ -55,7 +55,7 @@ module PlacesHttp
       log_request('POST', path)
 
       response = connection.post(path, payload.to_query) do |request|
-        request.headers['Accept'] = 'application/json'
+        request.headers.merge!({'Accept' => 'application/json'})
       end
       handle_response(response, :post, path)
     end
