@@ -69,6 +69,21 @@ module PlacesHttp
       handle_response(response, :delete, path)
     end
 
+    def connection
+
+      options = { url: "#{config.protocol}://#{config.server}" }
+      options.merge!(ssl_config) if config.protocol == 'https'
+
+      @connection ||= Faraday.new(options) do |faraday|
+        faraday.port = config.port if config.port
+        faraday.request   :url_encoded    # form-encode POST params
+        faraday.adapter   Faraday.default_adapter
+        # faraday.use     :http_cache
+        # faraday.response  :logger
+      end
+
+    end
+
     private
 
     def config
@@ -82,7 +97,8 @@ module PlacesHttp
     def handle_response(response, method, path)
       if ok?(response) || validation_failed?(response)
         if response.body
-          Oj.strict_load(response.body) #Don't use regular load method - any strings starting with ':' will be interpreted as a symbol
+          #Don't use regular load method - any strings starting with ':' ( :-)  from example) will be interpreted as a symbol
+          Oj.strict_load(response.body)
         else
           true
         end
@@ -94,13 +110,27 @@ module PlacesHttp
       end
     end
 
-    def connection
-      @connection ||= Faraday.new(:url => "http://#{config.server}") do |faraday|
-        faraday.port = config.port
-        faraday.request   :url_encoded    # form-encode POST params
-        faraday.adapter   Faraday.default_adapter
-        # faraday.use     :http_cache
-        # faraday.response  :logger
+
+    def ssl_config
+      if osx?
+        osx_ssl_config
+      else
+        { :ssl => { :ca_path => '/etc/ssl/certs' } }
+      end
+    end
+
+    def osx?
+      `uname`.chomp == 'Darwin'
+    end
+
+    def osx_ssl_config
+
+      osx_cert_file_path = '/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt'
+
+      if File.exists?(osx_cert_file_path)
+        { ssl: { :ca_file => osx_cert_file_path } }
+      else
+        raise "Unable to load certificate authority file at #{osx_cert_file_path}. Try `brew install curl-ca-bundle`"
       end
     end
 

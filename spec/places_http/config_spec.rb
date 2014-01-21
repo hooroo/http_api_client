@@ -20,8 +20,9 @@ module PlacesHttp
       let(:config_file) { 'spec/config/http_clients.yml' }
 
       it 'loads the config for the environment' do
+        expect(config.my_client.protocol).to eql 'http'
         expect(config.my_client.server).to eql 'test-server'
-        expect(config.my_client.port).to eql 'test-port'
+        expect(config.my_client.port).to eql 80
         expect(config.my_client.base_uri).to eql 'test-base-uri'
       end
     end

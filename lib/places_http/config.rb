@@ -9,7 +9,7 @@ module PlacesHttp
 
     def initialize(config_file = 'config/http_clients.yml')
       if File.exists?(config_file)
-        @config = symbolize_keys(YAML.load_file(config_file)[PlacesHttp.env])
+        @config = symbolize_keys(config_for(config_file, PlacesHttp.env))
       else
         raise "Could not load config file: #{config_file}"
       end
@@ -26,6 +26,16 @@ module PlacesHttp
         super
       end
 
+    end
+
+    def config_for(config_file, environment)
+      all_config = YAML.load_file(config_file)
+      env_config = all_config[environment]
+      if env_config
+        env_config
+      else
+        raise "You must supply a http config for the '#{environment}' environment in '#{config_file}'."
+      end
     end
 
     def symbolize_keys(hash)
