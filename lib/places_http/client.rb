@@ -77,7 +77,7 @@ module PlacesHttp
       @connection ||= Faraday.new(options) do |faraday|
         faraday.port = config.port if config.port
         faraday.request   :url_encoded    # form-encode POST params
-        faraday.adapter   Faraday.default_adapter
+        faraday.adapter   :net_http_persistent
         # faraday.use     :http_cache
         # faraday.response  :logger
       end
@@ -153,7 +153,7 @@ module PlacesHttp
 
     def log_request(method, path)
       PlacesHttp.logger.info "api_client_base_uri=#{config.server}" #For splunk
-      PlacesHttp.logger.info "Http Client (#{method}): #{path}"
+      PlacesHttp.logger.info "Http Client: #{method} #{config.protocol}://#{config.server}#{path}"
     end
 
   end

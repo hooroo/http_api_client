@@ -90,6 +90,14 @@ module PlacesHttp
         end
       end
 
+      describe "auth_params" do
+        it "appends auth params to request" do
+          client.stub(:auth_params).and_return({ token: 'abc123' })
+          connection.should_receive(:get).with('/test-base-uri/protected?token=abc123')
+          client.get('/protected')
+        end
+      end
+
       describe "response status code handling" do
 
         context "with a response with a status code in the 200 range" do
