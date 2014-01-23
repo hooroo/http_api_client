@@ -106,7 +106,7 @@ module PlacesHttp
         error_class = error_for_status(response.status)
         message = "#{response.status} #{method}: #{path}"
         PlacesHttp.logger.warn("Http Client #{error_class}: #{message}")
-        raise error_class, message, response.body
+        raise error_class.new(message, response.body)
       end
     end
 

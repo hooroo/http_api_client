@@ -8,7 +8,7 @@ module PlacesHttp
 
       attr_reader :response_body, :nested_error
 
-      def initialize(message, response_body = '', nested_error = nil)
+      def initialize(message, response_body, nested_error = nil)
         super(message)
         @message = message
         @response_body = response_body
