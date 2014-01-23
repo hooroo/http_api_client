@@ -105,8 +105,8 @@ module PlacesHttp
       else
         error_class = error_for_status(response.status)
         summary = "#{response.status} #{method}: #{path}"
-        PlacesHttp.logger.warn("ApiClient #{error_class}: #{summary}")
-        raise error_class, summary
+        PlacesHttp.logger.warn("Http Client #{error_class}: #{summary}")
+        raise error_class, summary, response.body
       end
     end
 

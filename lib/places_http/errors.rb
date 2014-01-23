@@ -4,7 +4,25 @@ module PlacesHttp
 
   module Errors
 
-    class BaseError < StandardError ; end
+    class BaseError < StandardError
+
+      attr_reader :response_body, :nested_error
+
+      def initialize(message, response_body = '', nested_error = nil)
+        super(message)
+        @message = message
+        @response_body = response_body
+        @nested_error = nested_error
+      end
+
+      def message
+        messages = [@message]
+        messages << nested_error.message if nested_error
+        messages << response_body
+        messages.join("\n\n")
+      end
+
+    end
 
     #400 Range
     class BadRequest < BaseError ; end
