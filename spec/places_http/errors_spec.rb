@@ -1,5 +1,6 @@
-# require 'spec_helper'
+
 require 'places_http/errors'
+
 module PlacesHttp
   module Errors
 

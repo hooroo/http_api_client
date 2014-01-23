@@ -5,10 +5,10 @@ module PlacesHttp
 
     let(:client) { Client.new(:my_client, 'spec/config/http_clients.yml') }
 
-    let(:get_response) { double('get response', :body => '{"id": 1}', status: 200) }
-    let(:post_response) { double('post response', :body => '{"id": 1}', status: 200) }
-    let(:put_response) { double('put response', :body => '{"id": 1}', status: 200) }
-    let(:delete_response) { double('delete response', status: 200, body: nil) }
+    let(:get_response) { double('get response', body: '{"id": 1}', status: 200) }
+    let(:post_response) { double('post response', body: '{"id": 1}', status: 200) }
+    let(:put_response) { double('put response', body: '{"id": 1}', status: 200) }
+    let(:delete_response) { double('delete response', body: nil, status: 200) }
 
     context "without a stubbed connection" do
 
