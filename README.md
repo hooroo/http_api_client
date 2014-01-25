@@ -108,6 +108,14 @@ client.find_all(base_path, query = {})
 
 ```
 
+## SSL Support
+
+SSL is supported but requires certificates for the major certificate authorities to be installed when used on OSX. Linux should have these already.
+
+`brew install curl-ca-bundle`
+
+This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
+
 
 
 
