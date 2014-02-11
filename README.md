@@ -129,6 +129,7 @@ This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
 ## TODO:
 
 * Consider enforcing an SSL connection when using HTTP Basic Auth
+* Where we log out ```http_client_server_request```, we should also output the time taken to respond in the same log entry.
 
 
 
