@@ -23,7 +23,7 @@ module ApiClients
 end
 ```
 
-This will construct a http client configured as 'places_api' in the `config\http_clients.yml` configuration file.
+This will construct a http client configured as 'places_api' in the `config/http_clients.yml` configuration file.
 
 Eg:
 ```
