@@ -13,8 +13,6 @@ module PlacesHttp
     let(:put_response)    { double('put response', body: '{"id": 1}', status: 200) }
     let(:delete_response) { double('delete response', body: nil, status: 200) }
 
-    describe '#connection_options'
-
     context "without a stubbed connection" do
 
       describe "connnection" do
