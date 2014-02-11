@@ -26,7 +26,7 @@ module PlacesHttp
 
     #400 Range
     class BadRequest < BaseError ; end
-    class Unauthorised < BaseError ; end
+    class Unauthorized < BaseError ; end
     class Forbidden < BaseError ; end
     class NotFound < BaseError ; end
     class MethodNotAllowed < BaseError ; end
