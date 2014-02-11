@@ -10,6 +10,8 @@ require 'places_http/errors'
 module PlacesHttp
   class Client
 
+    OSX_CERT_PATH = '/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt'
+
     include PlacesHttp::Errors::Factory
 
     attr_reader :client_id
@@ -38,7 +40,6 @@ module PlacesHttp
     end
 
     def get(base_path, query = {}, headers = {})
-
       path = full_path(base_path, query)
       log_request('GET', path)
 
@@ -50,7 +51,6 @@ module PlacesHttp
     end
 
     def create(base_path, payload)
-
       path = full_path(base_path)
       log_request('POST', path)
 
@@ -111,28 +111,22 @@ module PlacesHttp
       end
     end
 
-
     def ssl_config
-      if osx?
-        osx_ssl_config
+      return { ssl: { ca_file: config.ca_file } }  if config.ca_file
+      return { ssl: { ca_file: osx_ssl_ca_file } } if osx?
+      return { ssl: { ca_path: '/etc/ssl/certs' } }
+    end
+
+    def osx_ssl_ca_file
+      if File.exists?(OSX_CERT_PATH)
+         OSX_CERT_PATH
       else
-        { :ssl => { :ca_path => '/etc/ssl/certs' } }
+        raise "Unable to load certificate authority file at #{OSX_CERT_PATH}. Try `brew install curl-ca-bundle`"
       end
     end
 
     def osx?
       `uname`.chomp == 'Darwin'
-    end
-
-    def osx_ssl_config
-
-      osx_cert_file_path = '/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt'
-
-      if File.exists?(osx_cert_file_path)
-        { ssl: { :ca_file => osx_cert_file_path } }
-      else
-        raise "Unable to load certificate authority file at #{osx_cert_file_path}. Try `brew install curl-ca-bundle`"
-      end
     end
 
     def ok?(response)

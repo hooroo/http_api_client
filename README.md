@@ -29,14 +29,14 @@ Eg:
 ```
 production:
   foursquare:
-    protocol: 'https'
+    protocol: https
     server: api.foursquare.com
     #port: 443 (not required)
     #base_uri: '' (not required)
 
 development:
   foursquare:
-    protocol: 'https'
+    protocol: https
     server: api.foursquare.com
     #port: 443 (not required)
     #base_uri: '' (not required)
@@ -45,6 +45,15 @@ development:
 #etc. Regular yaml defaults / overrides etc can be used to keep DRY
 
 ```
+
+### Known keys:
+
+* ```protocol```  - protocol, e.g. **https** or **http**
+* ```server```    - the host name, e.g. **api.foursquare.com**
+* ```port```      - self-explanatory (not required)
+* ```base_uri```  - base path/uri e.g. **/api** (not required)
+* ```ca_file```   - the path to a self-signed cert authority file, e.g. **/usr/local/etc/nginx/my-server.crt** (not required)
+
 
 By implementing your http clients as singletons, you can make the most of faraday's persistent http connections via net_http_persistent. This can have a significant impact on performance for chatty apps assuming that the target server implements keep-alive.
 

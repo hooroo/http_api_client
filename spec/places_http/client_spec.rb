@@ -1,7 +1,6 @@
 # require 'spec_helper'
 
 require 'places_http/client'
-require 'pry'
 
 module PlacesHttp
   describe Client do
@@ -28,17 +27,45 @@ module PlacesHttp
         end
 
         context "with ssl" do
-          let(:client) { Client.new(:my_client, 'spec/config/http_clients_with_ssl.yml') }
 
-          it "creates a connection based on config" do
-            expect(client.connection.url_prefix.to_s).to eq 'https://test-server/'
+          context 'when a self-signed certificate authority is specified' do
+            let(:client) { Client.new(:my_client, 'spec/config/http_clients_with_self_signed_cert.yml') }
+
+            it "creates a connection based on config" do
+              expect(client.connection.url_prefix.to_s).to eq 'https://test-server/'
+            end
+
+            it 'sets ca_file path correctly' do
+              expect(client.connection.ssl.ca_file).to eq '/usr/local/etc/nginx/test-server.crt'
+            end
           end
 
-          it "sets the ssl options" do
-            expect(client.connection.ssl.to_hash).to eq client.send(:ssl_config)[:ssl]
+          context 'when the machine is OSX' do
+            let(:client) { Client.new(:my_client, 'spec/config/http_clients_with_ssl.yml') }
+            before { client.stub(osx?: true) }
+
+            it "creates a connection based on config" do
+              expect(client.connection.url_prefix.to_s).to eq 'https://test-server/'
+            end
+
+            it "sets the ssl options" do
+              expect(client.connection.ssl.ca_file).to eq Client::OSX_CERT_PATH
+            end
+          end
+
+          context 'when the machine is not OSX' do
+            let(:client) { Client.new(:my_client, 'spec/config/http_clients_with_ssl.yml') }
+            before { client.stub(osx?: false) }
+
+            it "creates a connection based on config" do
+              expect(client.connection.url_prefix.to_s).to eq 'https://test-server/'
+            end
+
+            it "sets the ssl options" do
+              expect(client.connection.ssl.ca_path).to eq '/etc/ssl/certs'
+            end
           end
         end
-
       end
 
     end

@@ -1,0 +1,7 @@
+test:
+  my_client:
+    protocol: 'https'
+    server: test-server
+    port: 443
+    base_uri: test-base-uri
+    ca_file:  /usr/local/etc/nginx/test-server.crt
