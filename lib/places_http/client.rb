@@ -70,18 +70,13 @@ module PlacesHttp
     end
 
     def connection
-
-      options = { url: "#{config.protocol}://#{config.server}" }
-      options.merge!(ssl_config) if config.protocol == 'https'
-
-      @connection ||= Faraday.new(options) do |faraday|
+      @connection ||= Faraday.new(connection_options) do |faraday|
         faraday.port = config.port if config.port
         faraday.request   :url_encoded    # form-encode POST params
         faraday.adapter   :net_http_persistent
         # faraday.use     :http_cache
         # faraday.response  :logger
       end
-
     end
 
     private
@@ -92,6 +87,12 @@ module PlacesHttp
 
     def auth_params
       {}
+    end
+
+    def connection_options
+      options = { url: "#{config.protocol}://#{config.server}" }
+      options.merge!(ssl_config) if config.protocol == 'https'
+      options
     end
 
     def handle_response(response, method, path)
@@ -143,11 +144,10 @@ module PlacesHttp
     end
 
     def full_path(path, query = {})
-
       query_with_auth = query.merge(auth_params)
 
       path = "/#{config.base_uri}/#{path}".gsub(/\/+/, '/')
-      path = "#{path}?#{query_with_auth.to_query}" if query_with_auth && query_with_auth.keys.size > 0
+      path = "#{path}?#{query_with_auth.to_query}" if query_with_auth && query_with_auth.keys.any?
       path
     end
 

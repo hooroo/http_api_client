@@ -1,18 +1,24 @@
 # require 'spec_helper'
+
 require 'places_http/client'
+require 'pry'
+
 module PlacesHttp
   describe Client do
 
     let(:client) { Client.new(:my_client, 'spec/config/http_clients.yml') }
 
-    let(:get_response) { double('get response', body: '{"id": 1}', status: 200) }
-    let(:post_response) { double('post response', body: '{"id": 1}', status: 200) }
-    let(:put_response) { double('put response', body: '{"id": 1}', status: 200) }
+    let(:get_response)    { double('get response', body: '{"id": 1}', status: 200) }
+    let(:post_response)   { double('post response', body: '{"id": 1}', status: 200) }
+    let(:put_response)    { double('put response', body: '{"id": 1}', status: 200) }
     let(:delete_response) { double('delete response', body: nil, status: 200) }
+
+    describe '#connection_options'
 
     context "without a stubbed connection" do
 
       describe "connnection" do
+
         context "without ssl" do
           it "creates a connection based on config" do
             expect(client.connection.url_prefix.to_s).to eq 'http://test-server/'
@@ -24,7 +30,6 @@ module PlacesHttp
         end
 
         context "with ssl" do
-
           let(:client) { Client.new(:my_client, 'spec/config/http_clients_with_ssl.yml') }
 
           it "creates a connection based on config" do
@@ -41,9 +46,7 @@ module PlacesHttp
     end
 
     context "with a stubbed connection" do
-
       let(:connection) { double('connection', get: get_response, post: post_response, put: put_response, delete: delete_response) }
-
 
       before do
         client.stub(:connection).and_return connection
@@ -101,7 +104,6 @@ module PlacesHttp
       describe "response status code handling" do
 
         context "with a response with a status code in the 200 range" do
-
           let(:response) { double('response', :body => '{"id": 1}', status: 200) }
 
           describe "response" do

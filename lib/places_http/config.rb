@@ -27,7 +27,6 @@ module PlacesHttp
       else
         super
       end
-
     end
 
     def config_for(config_file, environment)
