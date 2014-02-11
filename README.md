@@ -46,18 +46,19 @@ development:
 
 ```
 
-### Known keys:
+### Possible keys
 
-* ```protocol```  - protocol, e.g. **https** or **http**
-* ```server```    - the host name, e.g. **api.foursquare.com**
-* ```port```      - self-explanatory (not required)
-* ```base_uri```  - base path/uri e.g. **/api** (not required)
-* ```ca_file```   - the path to a self-signed cert authority file, e.g. **/usr/local/etc/nginx/my-server.crt** (not required)
-
+* ```protocol```              - protocol, e.g. **https** or **http**
+* ```server```                - the host name, e.g. **api.foursquare.com**
+* ```port```                  - self-explanatory (not required)
+* ```base_uri```              - base path/uri e.g. **/api** (not required)
+* ```http_basic_username```   - username for HTTP Basic Auth (not required)
+* ```http_basic_password```   - password for HTTP Basic Auth (not required)
+* ```ca_file```               - the path to a self-signed cert authority file, e.g. **/usr/local/etc/nginx/my-server.crt** (not required)
 
 By implementing your http clients as singletons, you can make the most of faraday's persistent http connections via net_http_persistent. This can have a significant impact on performance for chatty apps assuming that the target server implements keep-alive.
 
-### Specifiying Authentication Params
+### Specifiying Token Authentication Params
 
 Some http apis such as foursquare or instagram require auth params to be passed. These can be defined at the client level by implementing the `auth_params` method.
 
@@ -125,6 +126,9 @@ SSL is supported but requires certificates for the major certificate authorities
 
 This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
 
+## TODO:
+
+* Consider enforcing an SSL connection when using HTTP Basic Auth
 
 
 
