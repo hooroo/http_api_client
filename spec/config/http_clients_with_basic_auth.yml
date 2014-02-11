@@ -1,0 +1,14 @@
+test:
+  client_with_auth:
+    protocol: 'https'
+    server: test-server
+    port: 443
+    base_uri: test-base-uri
+    http_basic_username: admin
+    http_basic_password: password
+
+  client_with_no_auth:
+    protocol: 'https'
+    server: test-server
+    port: 443
+    base_uri: test-base-uri

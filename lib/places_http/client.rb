@@ -61,7 +61,6 @@ module PlacesHttp
     end
 
     def destroy(base_path, id)
-
       path = "#{base_path}/#{id}"
       log_request('DELETE', path)
 
@@ -76,6 +75,10 @@ module PlacesHttp
         faraday.adapter   :net_http_persistent
         # faraday.use     :http_cache
         # faraday.response  :logger
+
+        if config.http_basic_username
+          faraday.basic_auth config.http_basic_username, config.http_basic_password
+        end
       end
     end
 

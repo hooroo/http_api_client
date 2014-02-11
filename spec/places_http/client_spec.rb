@@ -66,6 +66,25 @@ module PlacesHttp
             end
           end
         end
+
+        describe 'http basic auth' do
+
+          context 'when auth is not specified' do
+            let(:client) { Client.new(:client_with_no_auth, 'spec/config/http_clients_with_basic_auth.yml') }
+
+            it 'does not set the auth on the connection' do
+              expect(client.connection.headers[:Authorization]).to be_nil
+            end
+          end
+
+          context 'when auth is specified' do
+            let(:client) { Client.new(:client_with_auth, 'spec/config/http_clients_with_basic_auth.yml') }
+
+            it 'sets the auth on the connection' do
+              expect(client.connection.headers[:Authorization]).to_not be_nil
+            end
+          end
+        end
       end
 
     end
