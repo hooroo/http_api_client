@@ -1,0 +1,3 @@
+module HttpClient
+  VERSION = "0.0.1"
+end

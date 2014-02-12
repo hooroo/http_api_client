@@ -1,4 +1,4 @@
-# PlacesHttp
+# HttpClient
 Basic shared http related utils and error translation for places applications.
 
 Currently:
@@ -8,11 +8,11 @@ Currently:
 
 ## Usage
 
-Create a http client by extending `PlacesHttp::Client` and providing a configuration key for the config relating to that client:
+Create a http client by extending `HttpClient::Client` and providing a configuration key for the config relating to that client:
 
 ```ruby
 module ApiClients
-  class Foursquare < PlacesHttp::Client
+  class Foursquare < HttpClient::Client
 
     include Singleton
 
@@ -64,7 +64,7 @@ Some http apis such as foursquare or instagram require auth params to be passed.
 
 ```ruby
 module ApiClients
-  class Foursquare < PlacesHttp::Client
+  class Foursquare < HttpClient::Client
 
     include Singleton
 
@@ -86,7 +86,7 @@ end
 
 ### Current API
 
-All api calls will return ruby hashed version of json responsea and translate error codes to appropriate Errors (Eg. 404 -> PlacesHttp::NotFound)
+All api calls will return ruby hashed version of json responsea and translate error codes to appropriate Errors (Eg. 404 -> HttpClient::NotFound)
 
 
 #### Raw Http Api
