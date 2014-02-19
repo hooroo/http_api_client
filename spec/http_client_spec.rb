@@ -5,8 +5,14 @@ describe HttpClient do
   context "without rails" do
 
     describe ".env" do
-      it 'returns "test"' do
+      it 'returns "test" by default' do
         expect(HttpClient.env).to eq 'test'
+      end
+
+      it 'can be set' do
+        HttpClient.env = 'staging'
+        expect(HttpClient.env).to eq 'staging'
+        HttpClient.env = nil
       end
     end
 

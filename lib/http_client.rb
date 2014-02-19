@@ -14,11 +14,17 @@ module HttpClient
   end
 
   def self.env
-    if rails_loaded?
+    if @env
+      @env
+    elsif rails_loaded?
       Rails.env
     else
       "test"
     end
+  end
+
+  def self.env=(env)
+    @env = env
   end
 
   private
