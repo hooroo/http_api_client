@@ -41,7 +41,7 @@ module HttpClient
 
     def get(base_path, query = {}, headers = {})
       path = full_path(base_path)
-      query = full_query(query).to_query
+      query = full_query(query)
       log_request('GET', path)
 
       response = connection.get(path, query) do |request|
