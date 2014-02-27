@@ -40,10 +40,11 @@ module HttpClient
     end
 
     def get(base_path, query = {}, headers = {})
-      path = full_path(base_path, query)
+      path = full_path(base_path)
+      query = full_query(query)
       log_request('GET', path)
 
-      response = connection.get(path) do |request|
+      response = connection.get(path, query) do |request|
         request.headers.merge!({'Accept' => 'application/json'}).merge(headers)
       end
 
@@ -52,6 +53,7 @@ module HttpClient
 
     def create(base_path, payload)
       path = full_path(base_path)
+      payload = full_query(payload)
       log_request('POST', path)
 
       response = connection.post(path, payload.to_query) do |request|
@@ -140,12 +142,13 @@ module HttpClient
       Integer(response.status) == 422
     end
 
-    def full_path(path, query = {})
-      query_with_auth = query.merge(auth_params)
-
+    def full_path(path)
       path = "/#{config.base_uri}/#{path}".gsub(/\/+/, '/')
-      path = "#{path}?#{query_with_auth.to_query}" if query_with_auth && query_with_auth.keys.any?
       path
+    end
+
+    def full_query(query)
+      query.merge(auth_params)
     end
 
     def log_request(method, path)
