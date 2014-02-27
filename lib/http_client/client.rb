@@ -40,11 +40,11 @@ module HttpClient
     end
 
     def get(base_path, query = {}, headers = {})
-      path = full_path(base_path)
-      query = full_query(query)
+
+      path = full_path_with_query(base_path, full_query(query))
       log_request('GET', path)
 
-      response = connection.get(path, query) do |request|
+      response = connection.get(path) do |request|
         request.headers.merge!({'Accept' => 'application/json'}).merge(headers)
       end
 
@@ -144,6 +144,12 @@ module HttpClient
 
     def full_path(path)
       path = "/#{config.base_uri}/#{path}".gsub(/\/+/, '/')
+      path
+    end
+
+    def full_path_with_query(path, query)
+      path = "/#{config.base_uri}/#{path}".gsub(/\/+/, '/')
+      path += "?#{query.to_query}" unless query.keys.empty?
       path
     end
 

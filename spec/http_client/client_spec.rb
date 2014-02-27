@@ -100,14 +100,14 @@ module HttpClient
 
       describe "#find" do
         it "calls http connection with get and correct url" do
-          connection.should_receive(:get).with('/test-base-uri/path/1',{})
+          connection.should_receive(:get).with('/test-base-uri/path/1')
           client.find('/path', 1)
         end
       end
 
       describe "#find_nested" do
         it "calls http connection with get and correct url" do
-          connection.should_receive(:get).with('/test-base-uri/resource/1/resources',{})
+          connection.should_receive(:get).with('/test-base-uri/resource/1/resources')
           client.find_nested('/resource', 1, '/resources')
         end
       end
@@ -144,20 +144,20 @@ module HttpClient
 
       describe "#find_all" do
         it "calls http connection with correct url without query" do
-          connection.should_receive(:get).with('/test-base-uri/resources',{})
+          connection.should_receive(:get).with('/test-base-uri/resources')
           client.find_all('/resources')
         end
 
         it "calls http connection with correct url with query" do
-          connection.should_receive(:get).with('/test-base-uri/resources',{a: 1})
-          client.find_all('/resources', {a: 1})
+          connection.should_receive(:get).with("/test-base-uri/resources?#{{ a: 1 }.to_query}")
+          client.find_all('/resources', { a: 1 })
         end
       end
 
       describe "auth_params" do
         it "appends auth params to request" do
           client.stub(:auth_params).and_return({ token: 'abc123' })
-          connection.should_receive(:get).with('/test-base-uri/protected',{token: 'abc123'})
+          connection.should_receive(:get).with("/test-base-uri/protected?#{{ token: 'abc123' }.to_query}")
           client.get('/protected')
         end
       end
