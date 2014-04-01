@@ -118,6 +118,18 @@ client.find_all(base_path, query = {})
 
 ```
 
+#### Tracking Request Id
+In order to provide a common request id from api call to the service provider for the purposes of monitoring, a Request-Id header can be
+added to all requests. In order to do this, the following config options is required:
+
+`include_request_id_header: true`
+
+In addition to this, your client code should have set a thread local variable keyed under `request_id`.
+
+Eg: `Thread.current[:request_id]`
+
+With these in place, a request header will be added to the http request which can then be picked up and logged throughout the service provider application code.
+
 ## SSL Support
 
 SSL is supported but requires certificates for the major certificate authorities to be installed when used on OSX. Linux should have these already.
