@@ -126,7 +126,7 @@ added to all requests. In order to do this, the following config options is requ
 
 In addition to this, your client code should have set a thread local variable keyed under `request_id`.
 
-Eg: `Thread.current[:request_id]`
+Eg: `Thread.current[:request_id] = request_id`
 
 With these in place, a request header will be added to the http request which can then be picked up and logged throughout the service provider application code.
 
