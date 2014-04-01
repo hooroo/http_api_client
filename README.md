@@ -118,7 +118,7 @@ client.find_all(base_path, query = {})
 
 ```
 
-#### Tracking Request Id
+#### Request Id Tracking
 In order to provide a common request id from api call to the service provider for the purposes of monitoring, a Request-Id header can be
 added to all requests. In order to do this, the following config options is required:
 
