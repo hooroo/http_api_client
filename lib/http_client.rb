@@ -6,7 +6,7 @@ require "http_client/client"
 module HttpClient
 
   def self.logger
-    @logger || create_logger
+    @logger ||= create_logger
   end
 
   def self.logger=(logger)

@@ -6,6 +6,7 @@ require 'oj'
 require 'http_client'
 require 'http_client/errors'
 require 'http_client/connection_factory'
+require 'http_client/timed_result'
 
 module HttpClient
   class Client
@@ -38,27 +39,34 @@ module HttpClient
 
     def get(path, query = {}, headers = {})
 
-      log_request('GET', path)
+      log_data = { method: 'get', server: config.server, path: path_with_query(path, query) }
 
-      response = connection.get(full_path(path), full_query(query), request_headers(headers))
+      response = TimedResult.time('http_client_request', log_data) do
+        connection.get(full_path(path), full_query(query), request_headers(headers))
+      end
 
       handle_response(response, :get, path)
     end
 
     def create(path, payload, headers = {})
 
-      log_request('POST', path)
+      log_data = { method: 'post', server: config.server, path: full_path(path) }
 
-      response = connection.post(full_path(path), full_query(payload).to_query, request_headers(headers))
+      response = TimedResult.time('http_client_request', log_data) do
+        connection.post(full_path(path), full_query(payload).to_query, request_headers(headers))
+      end
 
       handle_response(response, :post, path)
     end
 
     def destroy(base_path, id, headers = {})
-      path = "#{base_path}/#{id}"
-      log_request('DELETE', path)
 
-      response = connection.delete(full_path(path), request_headers(headers))
+      path = "#{base_path}/#{id}"
+      log_data = { method: 'delete', server: config.server, path: full_path(path) }
+
+      response = TimedResult.time('http_client_request', log_data) do
+        connection.delete(full_path(path), request_headers(headers))
+      end
 
       handle_response(response, :delete, path)
     end
@@ -102,8 +110,8 @@ module HttpClient
       path
     end
 
-    def full_path_with_query(path, query)
-      path = "/#{config.base_uri}/#{path}".gsub(/\/+/, '/')
+    def path_with_query(path, query)
+      path = full_path(path)
       path += "?#{query.to_query}" unless query.keys.empty?
       path
     end
@@ -120,11 +128,6 @@ module HttpClient
 
     def default_accept_header
       {'Accept' => 'application/json'}
-    end
-
-    def log_request(method, path)
-      HttpClient.logger.info "http_client_server_request=#{config.server}" #For splunk
-      HttpClient.logger.info "Http Client: #{method} #{config.protocol}://#{config.server}#{path}"
     end
 
   end

@@ -26,6 +26,7 @@ describe HttpClient do
 
   context "with rails" do
     before :all do
+      HttpClient.logger = nil
       Object.const_set('Rails', StubRails.new)
       Rails.env = 'custom_env'
       Rails.logger = 'rails_logger'
