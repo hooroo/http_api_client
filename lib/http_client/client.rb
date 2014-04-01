@@ -5,25 +5,22 @@ require 'faraday'
 require 'oj'
 require 'http_client'
 require 'http_client/errors'
-
+require 'http_client/connection_factory'
 
 module HttpClient
   class Client
 
-    OSX_CERT_PATH = '/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt'
-
     include HttpClient::Errors::Factory
 
-    attr_reader :client_id
+    attr_reader :config
 
     def initialize(client_id, config_file = nil)
       raise "You must supply a http client config id (as defined in #{config_file || Config::DEFAULT_CONFIG_FILE_LOCATION}" unless client_id
-      @client_id = client_id
 
       if config_file
-        @config = Config.new(config_file)
+        @config = Config.new(config_file).send(client_id)
       else
-        @config = Config.new
+        @config = Config.new.send(client_id)
       end
     end
 
@@ -39,65 +36,41 @@ module HttpClient
       get("#{base_path}", query)
     end
 
-    def get(base_path, query = {}, headers = {})
+    def get(path, query = {}, headers = {})
 
-      path = full_path_with_query(base_path, full_query(query))
       log_request('GET', path)
 
-      response = connection.get(path) do |request|
-        request.headers.merge!({'Accept' => 'application/json'}).merge(headers)
-      end
+      response = connection.get(full_path(path), full_query(query), request_headers(headers))
 
       handle_response(response, :get, path)
     end
 
-    def create(base_path, payload)
-      path = full_path(base_path)
-      payload = full_query(payload)
+    def create(path, payload, headers = {})
+
       log_request('POST', path)
 
-      response = connection.post(path, payload.to_query) do |request|
-        request.headers.merge!({'Accept' => 'application/json'})
-      end
+      response = connection.post(full_path(path), full_query(payload).to_query, request_headers(headers))
+
       handle_response(response, :post, path)
     end
 
-    def destroy(base_path, id)
+    def destroy(base_path, id, headers = {})
       path = "#{base_path}/#{id}"
       log_request('DELETE', path)
 
-      response = connection.delete(full_path(path))
+      response = connection.delete(full_path(path), request_headers(headers))
+
       handle_response(response, :delete, path)
     end
 
     def connection
-      @connection ||= Faraday.new(connection_options) do |faraday|
-        faraday.port = config.port if config.port
-        faraday.request   :url_encoded    # form-encode POST params
-        faraday.adapter   :net_http_persistent
-        # faraday.use     :http_cache
-        # faraday.response  :logger
-
-        if config.http_basic_username
-          faraday.basic_auth config.http_basic_username, config.http_basic_password
-        end
-      end
+      @connection ||= ConnectionFactory.new(config).create
     end
 
     private
 
-    def config
-      @config.send(client_id)
-    end
-
     def auth_params
       {}
-    end
-
-    def connection_options
-      options = { url: "#{config.protocol}://#{config.server}" }
-      options.merge!(ssl_config) if config.protocol == 'https'
-      options
     end
 
     def handle_response(response, method, path)
@@ -114,24 +87,6 @@ module HttpClient
         HttpClient.logger.warn("Http Client #{error_class}: #{message}")
         raise error_class.new(message, response.body)
       end
-    end
-
-    def ssl_config
-      return { ssl: { ca_file: config.ca_file } }  if config.ca_file
-      return { ssl: { ca_file: osx_ssl_ca_file } } if osx?
-      return { ssl: { ca_path: '/etc/ssl/certs' } }
-    end
-
-    def osx_ssl_ca_file
-      if File.exists?(OSX_CERT_PATH)
-         OSX_CERT_PATH
-      else
-        raise "Unable to load certificate authority file at #{OSX_CERT_PATH}. Try `brew install curl-ca-bundle`"
-      end
-    end
-
-    def osx?
-      `uname`.chomp == 'Darwin'
     end
 
     def ok?(response)
@@ -155,6 +110,16 @@ module HttpClient
 
     def full_query(query)
       query.merge(auth_params)
+    end
+
+    def request_headers(headers)
+      all_headers = default_accept_header.merge(headers)
+      all_headers.merge!({'Request-Id' => Thread.current[:request_id]}) if config.include_request_id_header
+      all_headers
+    end
+
+    def default_accept_header
+      {'Accept' => 'application/json'}
     end
 
     def log_request(method, path)

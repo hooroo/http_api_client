@@ -1,0 +1,7 @@
+test:
+  my_client:
+    protocol: 'http'
+    server: test-server
+    port: 80
+    base_uri: test-base-uri
+    include_request_id_header: true
