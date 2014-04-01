@@ -39,7 +39,7 @@ module HttpClient
 
     def get(path, query = {}, headers = {})
 
-      log_data = { method: 'get', server: config.server, path: path_with_query(path, query) }
+      log_data = { method: 'get', host: config.server, path: path_with_query(path, query) }
 
       response = TimedResult.time('http_client_request', log_data) do
         connection.get(full_path(path), full_query(query), request_headers(headers))
@@ -50,7 +50,7 @@ module HttpClient
 
     def create(path, payload, headers = {})
 
-      log_data = { method: 'post', server: config.server, path: full_path(path) }
+      log_data = { method: 'post', host: config.server, path: full_path(path) }
 
       response = TimedResult.time('http_client_request', log_data) do
         connection.post(full_path(path), full_query(payload).to_query, request_headers(headers))
@@ -62,7 +62,7 @@ module HttpClient
     def destroy(base_path, id, headers = {})
 
       path = "#{base_path}/#{id}"
-      log_data = { method: 'delete', server: config.server, path: full_path(path) }
+      log_data = { method: 'delete', host: config.server, path: full_path(path) }
 
       response = TimedResult.time('http_client_request', log_data) do
         connection.delete(full_path(path), request_headers(headers))
