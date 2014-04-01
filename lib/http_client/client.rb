@@ -122,7 +122,7 @@ module HttpClient
 
     def request_headers(headers)
       all_headers = default_accept_header.merge(headers)
-      all_headers.merge!({'Request-Id' => Thread.current[:request_id]}) if config.include_request_id_header
+      all_headers.merge!({'X-Request-Id' => Thread.current[:request_id]}) if config.include_request_id_header
       all_headers
     end
 

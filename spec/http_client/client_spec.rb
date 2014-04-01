@@ -142,7 +142,7 @@ module HttpClient
       end
 
       it "adds the Request-Id header to the request" do
-        connection.should_receive(:get).with('/test-base-uri/path/1', {}, accept_header.merge('Request-Id' => request_id))
+        connection.should_receive(:get).with('/test-base-uri/path/1', {}, accept_header.merge('X-Request-Id' => request_id))
         client.find('/path', 1)
       end
     end
