@@ -32,7 +32,7 @@ module HttpClient
     def connection_options
       options = { url: "#{config.protocol}://#{config.server}" }
       options.merge!(ssl_config) if config.protocol == 'https'
-      options.merge!({ request: { params_encoder: RailsParamsEncoder } }) if {}.respond_to?(:to_query)
+      options.merge!({ request: { params_encoder: HttpClient.params_encoder } }) if {}.respond_to?(:to_query)
       options
     end
 

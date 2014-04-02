@@ -1,6 +1,7 @@
 # coding: utf-8
 
 require 'active_support/core_ext/object/to_query'
+require "active_support/json"
 require 'faraday'
 require 'oj'
 require 'http_client'
@@ -13,7 +14,7 @@ module HttpClient
 
     include HttpClient::Errors::Factory
 
-    attr_reader :config
+    attr_reader :config, :params_encoder
 
     def initialize(client_id, config_file = nil)
       raise "You must supply a http client config id (as defined in #{config_file || Config::DEFAULT_CONFIG_FILE_LOCATION}" unless client_id
@@ -23,6 +24,9 @@ module HttpClient
       else
         @config = Config.new.send(client_id)
       end
+
+      @params_encoder = HttpClient.params_encoder
+
     end
 
     def find(base_path, id, query = {})
@@ -42,7 +46,7 @@ module HttpClient
       log_data = { method: 'get', host: config.server, path: path_with_query(path, query) }
 
       response = TimedResult.time('http_client_request', log_data) do
-        connection.get(full_path(path), full_query(query), request_headers(headers))
+        connection.get(full_path(path), with_auth(query), request_headers(headers))
       end
 
       handle_response(response, :get, path)
@@ -53,7 +57,7 @@ module HttpClient
       log_data = { method: 'post', host: config.server, path: full_path(path) }
 
       response = TimedResult.time('http_client_request', log_data) do
-        connection.post(full_path(path), full_query(payload).to_query, request_headers(headers))
+        connection.post(full_path(path), JSON.fast_generate(with_auth(payload)), request_headers(headers))
       end
 
       handle_response(response, :post, path)
@@ -112,23 +116,34 @@ module HttpClient
 
     def path_with_query(path, query)
       path = full_path(path)
-      path += "?#{query.to_query}" unless query.keys.empty?
+      path += "?#{params_encoder.encode(query)}" unless query.keys.empty?
       path
     end
 
-    def full_query(query)
+    def with_auth(query)
       query.merge(auth_params)
     end
 
     def request_headers(headers)
-      all_headers = default_accept_header.merge(headers)
+      all_headers = base_headers.merge(headers)
       all_headers.merge!({'X-Request-Id' => Thread.current[:request_id]}) if config.include_request_id_header
       all_headers
     end
 
-    def default_accept_header
-      {'Accept' => 'application/json'}
+    def base_headers
+      {
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json'
+      }
     end
+
+    # def params_encoder
+    #   if HttpClient::rails_loaded?
+    #     RailsParamsEncoder
+    #   else
+
+    #   end
+    # end
 
   end
 end

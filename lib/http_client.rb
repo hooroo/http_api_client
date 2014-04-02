@@ -27,6 +27,14 @@ module HttpClient
     @env = env
   end
 
+  def self.params_encoder
+    if HttpClient.rails_loaded?
+      RailsParamsEncoder
+    else
+      Faraday::Utils.default_params_encoder
+    end
+  end
+
   private
 
   def self.create_logger
