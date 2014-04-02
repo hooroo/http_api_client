@@ -41,35 +41,35 @@ module HttpClient
       get("#{base_path}", query)
     end
 
-    def get(path, query = {}, headers = {})
+    def get(path, query = {}, custom_headers = {})
 
       log_data = { method: 'get', host: config.server, path: path_with_query(path, query) }
 
       response = TimedResult.time('http_client_request', log_data) do
-        connection.get(full_path(path), with_auth(query), request_headers(headers))
+        connection.get(full_path(path), with_auth(query), request_headers(get_headers, custom_headers))
       end
 
       handle_response(response, :get, path)
     end
 
-    def create(path, payload, headers = {})
+    def create(path, payload, custom_headers = {})
 
       log_data = { method: 'post', host: config.server, path: full_path(path) }
 
       response = TimedResult.time('http_client_request', log_data) do
-        connection.post(full_path(path), JSON.fast_generate(with_auth(payload)), request_headers(headers))
+        connection.post(full_path(path), JSON.fast_generate(with_auth(payload)), request_headers(update_headers, custom_headers))
       end
 
       handle_response(response, :post, path)
     end
 
-    def destroy(base_path, id, headers = {})
+    def destroy(base_path, id, custom_headers = {})
 
       path = "#{base_path}/#{id}"
       log_data = { method: 'delete', host: config.server, path: full_path(path) }
 
       response = TimedResult.time('http_client_request', log_data) do
-        connection.delete(full_path(path), request_headers(headers))
+        connection.delete(full_path(path), request_headers(update_headers, custom_headers))
       end
 
       handle_response(response, :delete, path)
@@ -124,18 +124,26 @@ module HttpClient
       query.merge(auth_params)
     end
 
-    def request_headers(headers)
-      all_headers = base_headers.merge(headers)
+    def request_headers(base_headers, custom_headers = {})
+      all_headers = base_headers.merge(custom_headers)
       all_headers.merge!({'X-Request-Id' => Thread.current[:request_id]}) if config.include_request_id_header
       all_headers
     end
 
-    def base_headers
+    def get_headers
+      {
+        'Accept' => 'application/json',
+      }
+    end
+
+    def update_headers
       {
         'Accept' => 'application/json',
         'Content-Type' => 'application/json'
       }
     end
+
+
 
     # def params_encoder
     #   if HttpClient::rails_loaded?

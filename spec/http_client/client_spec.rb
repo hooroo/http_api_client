@@ -16,11 +16,12 @@ module HttpClient
 
     let(:connection) { double('connection', get: get_response, post: post_response, put: put_response, delete: delete_response) }
 
-    let(:base_headers) do
-      {
-        'Accept' => 'application/json',
-        'Content-Type' => 'application/json'
-      }
+    let(:base_get_headers) do
+      { 'Accept' => 'application/json' }
+    end
+
+    let(:base_update_headers) do
+      base_get_headers.merge({ 'Accept' => 'application/json', 'Content-Type' => 'application/json' })
     end
 
     before do
@@ -29,26 +30,26 @@ module HttpClient
 
     describe "#find" do
       it "calls http connection with get and correct url" do
-        connection.should_receive(:get).with('/test-base-uri/path/1', {}, base_headers)
+        connection.should_receive(:get).with('/test-base-uri/path/1', {}, base_get_headers)
         client.find('/path', 1)
       end
     end
 
     describe "#find_all" do
       it "calls http connection with correct url without query" do
-        connection.should_receive(:get).with('/test-base-uri/resources', {}, base_headers)
+        connection.should_receive(:get).with('/test-base-uri/resources', {}, base_get_headers)
         client.find_all('/resources')
       end
 
       it "calls http connection with correct url with query" do
-        connection.should_receive(:get).with("/test-base-uri/resources", { a: 1 }, base_headers)
+        connection.should_receive(:get).with("/test-base-uri/resources", { a: 1 }, base_get_headers)
         client.find_all('/resources', { a: 1 })
       end
     end
 
     describe "#find_nested" do
       it "calls http connection with get and correct url" do
-        connection.should_receive(:get).with('/test-base-uri/resource/1/resources', {}, base_headers)
+        connection.should_receive(:get).with('/test-base-uri/resource/1/resources', {}, base_get_headers)
         client.find_nested('/resource', 1, '/resources')
       end
     end
@@ -67,14 +68,14 @@ module HttpClient
 
         it "calls http connection with post and correct url and post data" do
           payload = { text: "hello", :key => 'one' }
-          connection.should_receive(:post).with('/test-base-uri/path', JSON.fast_generate(payload), base_headers)
+          connection.should_receive(:post).with('/test-base-uri/path', JSON.fast_generate(payload), base_update_headers)
           client.create('/path', payload)
         end
       end
 
       it "calls http connection with post and correct url and post data" do
         payload = { text: "hello"}
-        connection.should_receive(:post).with('/test-base-uri/path', JSON.fast_generate(payload), base_headers)
+        connection.should_receive(:post).with('/test-base-uri/path', JSON.fast_generate(payload), base_update_headers)
         client.create('/path', payload)
       end
 
@@ -82,7 +83,7 @@ module HttpClient
 
     describe "#delete" do
       it "calls http connection with delete and correct url" do
-        connection.should_receive(:delete).with('/test-base-uri/path/1', base_headers)
+        connection.should_receive(:delete).with('/test-base-uri/path/1', base_update_headers)
         client.destroy('/path', 1)
       end
     end
@@ -90,7 +91,7 @@ module HttpClient
     describe "auth_params" do
       it "appends auth params to request" do
         client.stub(:auth_params).and_return({ token: 'abc123' })
-        connection.should_receive(:get).with("/test-base-uri/protected", { token: 'abc123' }, base_headers)
+        connection.should_receive(:get).with("/test-base-uri/protected", { token: 'abc123' }, base_get_headers)
         client.get('/protected')
       end
     end
@@ -132,7 +133,7 @@ module HttpClient
 
     context 'without request id tracking configured' do
       it "does not add the Request-Id header to the request" do
-        connection.should_receive(:get).with('/test-base-uri/path/1', {}, base_headers)
+        connection.should_receive(:get).with('/test-base-uri/path/1', {}, base_get_headers)
         client.find('/path', 1)
       end
     end
@@ -148,7 +149,7 @@ module HttpClient
       end
 
       it "adds the Request-Id header to the request" do
-        connection.should_receive(:get).with('/test-base-uri/path/1', {}, base_headers.merge('X-Request-Id' => request_id))
+        connection.should_receive(:get).with('/test-base-uri/path/1', {}, base_get_headers.merge('X-Request-Id' => request_id))
         client.find('/path', 1)
       end
     end
