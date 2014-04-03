@@ -1,6 +1,6 @@
-require 'http_client'
+require 'http_api_client'
 
-module HttpClient
+module HttpApiClient
 
   module Errors
 

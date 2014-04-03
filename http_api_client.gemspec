@@ -1,15 +1,15 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'http_client/version'
+require 'http_api_client/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "http_client"
-  spec.version       = HttpClient::VERSION
-  spec.authors       = ["Rob Monie"]
+  spec.name          = "http_api_client"
+  spec.version       = HttpApiClient::VERSION
+  spec.authors       = ["Rob Monie", "Andrei Miulescu", "Stuart Liston", "Chris Rhode"]
   spec.email         = ["robmonie@gmail.com"]
-  spec.description   = %q{Http related utils and error translation for Hooroo Places applications}
-  spec.summary       = %q{Http related utils and error translation for Hooroo Places applications}
+  spec.description   = %q{Http client wrapper for simplified api access}
+  spec.summary       = %q{}
   spec.homepage      = ""
   spec.license       = "MIT"
 

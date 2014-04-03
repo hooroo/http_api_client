@@ -1,4 +1,4 @@
-module HttpClient
+module HttpApiClient
   module RailsParamsEncoder
 
     def self.encode(params)

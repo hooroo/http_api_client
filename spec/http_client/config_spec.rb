@@ -1,6 +1,6 @@
 # require 'spec_helper'
-require 'http_client/config'
-module HttpClient
+require 'http_api_client/config'
+module HttpApiClient
 
   describe Config do
 
@@ -17,7 +17,7 @@ module HttpClient
 
     context "with a valid config file" do
 
-      let(:config_file) { 'spec/config/http_clients.yml' }
+      let(:config_file) { 'spec/config/http_api_clients.yml' }
 
       it 'loads the config for the environment' do
         expect(config.my_client.protocol).to eql 'http'

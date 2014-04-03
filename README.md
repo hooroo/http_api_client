@@ -1,4 +1,4 @@
-# HttpClient
+# HttpApiClient
 Basic shared http related utils and error translation for places applications.
 
 Currently:
@@ -8,11 +8,11 @@ Currently:
 
 ## Usage
 
-Create a http client by extending `HttpClient::Client` and providing a configuration key for the config relating to that client:
+Create a http client by extending `HttpApiClient::Client` and providing a configuration key for the config relating to that client:
 
 ```ruby
 module ApiClients
-  class Foursquare < HttpClient::Client
+  class Foursquare < HttpApiClient::Client
 
     include Singleton
 
@@ -23,7 +23,7 @@ module ApiClients
 end
 ```
 
-This will construct a http client configured as 'places_api' in the `config/http_clients.yml` configuration file.
+This will construct a http client configured as 'places_api' in the `config/http_api_clients.yml` configuration file.
 
 Eg:
 ```
@@ -64,7 +64,7 @@ Some http apis such as foursquare or instagram require auth params to be passed.
 
 ```ruby
 module ApiClients
-  class Foursquare < HttpClient::Client
+  class Foursquare < HttpApiClient::Client
 
     include Singleton
 
@@ -86,7 +86,7 @@ end
 
 ### Current API
 
-All api calls will return ruby hashed version of json responsea and translate error codes to appropriate Errors (Eg. 404 -> HttpClient::NotFound)
+All api calls will return ruby hashed version of json responsea and translate error codes to appropriate Errors (Eg. 404 -> HttpApiClient::NotFound)
 
 
 #### Raw Http Api
@@ -141,7 +141,3 @@ This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
 ## TODO:
 
 * Consider enforcing an SSL connection when using HTTP Basic Auth
-* Where we log out ```http_client_server_request```, we should also output the time taken to respond in the same log entry.
-
-
-

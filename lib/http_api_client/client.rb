@@ -4,17 +4,17 @@ require 'active_support/core_ext/object/to_query'
 require "active_support/json"
 require 'faraday'
 require 'oj'
-require 'http_client'
-require 'http_client/errors'
-require 'http_client/connection_factory'
-require 'http_client/timed_result'
+require 'http_api_client'
+require 'http_api_client/errors'
+require 'http_api_client/connection_factory'
+require 'http_api_client/timed_result'
 
-module HttpClient
+module HttpApiClient
   class Client
 
-    include HttpClient::Errors::Factory
+    include HttpApiClient::Errors::Factory
 
-    attr_reader :config, :params_encoder
+    attr_reader :config
 
     def initialize(client_id, config_file = nil)
       raise "You must supply a http client config id (as defined in #{config_file || Config::DEFAULT_CONFIG_FILE_LOCATION}" unless client_id
@@ -24,8 +24,6 @@ module HttpClient
       else
         @config = Config.new.send(client_id)
       end
-
-      @params_encoder = HttpClient.params_encoder
 
     end
 
@@ -45,7 +43,7 @@ module HttpClient
 
       log_data = { method: 'get', host: config.server, path: path_with_query(path, query) }
 
-      response = TimedResult.time('http_client_request', log_data) do
+      response = TimedResult.time('http_api_client_request', log_data) do
         connection.get(full_path(path), with_auth(query), request_headers(get_headers, custom_headers))
       end
 
@@ -56,7 +54,7 @@ module HttpClient
 
       log_data = { method: 'post', host: config.server, path: full_path(path) }
 
-      response = TimedResult.time('http_client_request', log_data) do
+      response = TimedResult.time('http_api_client_request', log_data) do
         connection.post(full_path(path), JSON.fast_generate(with_auth(payload)), request_headers(update_headers, custom_headers))
       end
 
@@ -68,7 +66,7 @@ module HttpClient
       path = "#{base_path}/#{id}"
       log_data = { method: 'delete', host: config.server, path: full_path(path) }
 
-      response = TimedResult.time('http_client_request', log_data) do
+      response = TimedResult.time('http_api_client_request', log_data) do
         connection.delete(full_path(path), request_headers(update_headers, custom_headers))
       end
 
@@ -80,6 +78,10 @@ module HttpClient
     end
 
     private
+
+    def params_encoder
+      @params_encoder ||= HttpApiClient.params_encoder
+    end
 
     def auth_params
       {}
@@ -96,7 +98,7 @@ module HttpClient
       else
         error_class = error_for_status(response.status)
         message = "#{response.status} #{method}: #{path}"
-        HttpClient.logger.warn("Http Client #{error_class}: #{message}")
+        HttpApiClient.logger.warn("Http Client #{error_class}: #{message}")
         raise error_class.new(message, response.body)
       end
     end
@@ -146,7 +148,7 @@ module HttpClient
 
 
     # def params_encoder
-    #   if HttpClient::rails_loaded?
+    #   if HttpApiClient::rails_loaded?
     #     RailsParamsEncoder
     #   else
 

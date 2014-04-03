@@ -13,7 +13,7 @@ class TimedResult
     log_entries << "timing=#{time}"
     log_entries.concat(log_data.to_param.split('&'))
 
-    HttpClient.logger.info(log_entries.join(", "))
+    HttpApiClient.logger.info(log_entries.join(", "))
 
   end
 

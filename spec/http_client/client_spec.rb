@@ -1,13 +1,11 @@
 # encoding: utf-8
 
-# require 'spec_helper'
+require 'http_api_client/client'
 
-require 'http_client/client'
-
-module HttpClient
+module HttpApiClient
   describe Client do
 
-    let(:client) { Client.new(:my_client, 'spec/config/http_clients.yml') }
+    let(:client) { Client.new(:my_client, 'spec/config/http_api_clients.yml') }
 
     let(:get_response)    { double('get response', body: '{"id": 1}', status: 200) }
     let(:post_response)   { double('post response', body: '{"id": 1}', status: 200) }
@@ -63,7 +61,7 @@ module HttpClient
               {:key => 'one'}
             end
           end
-          klass.new(:my_client, 'spec/config/http_clients_with_basic_auth.yml')
+          klass.new(:my_client, 'spec/config/http_api_clients_with_basic_auth.yml')
         end
 
         it "calls http connection with post and correct url and post data" do
@@ -140,7 +138,7 @@ module HttpClient
 
     context "with request id tracking configured" do
 
-      let(:client) { Client.new(:my_client, 'spec/config/http_clients_with_request_id.yml') }
+      let(:client) { Client.new(:my_client, 'spec/config/http_api_clients_with_request_id.yml') }
 
       let(:request_id) { 'abc-123' }
 

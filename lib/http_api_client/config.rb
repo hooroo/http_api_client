@@ -2,16 +2,16 @@
 
 require 'yaml'
 require 'ostruct'
-require 'http_client'
+require 'http_api_client'
 
-module HttpClient
+module HttpApiClient
   class Config
 
-    DEFAULT_CONFIG_FILE_LOCATION = 'config/http_clients.yml'
+    DEFAULT_CONFIG_FILE_LOCATION = 'config/http_api_clients.yml'
 
     def initialize(config_file = DEFAULT_CONFIG_FILE_LOCATION)
       if File.exists?(config_file)
-        @config = symbolize_keys(config_for(config_file, HttpClient.env))
+        @config = symbolize_keys(config_for(config_file, HttpApiClient.env))
       else
         raise "Could not load config file: #{config_file}"
       end

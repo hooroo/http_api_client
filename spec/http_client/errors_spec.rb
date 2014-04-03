@@ -1,7 +1,7 @@
 
-require 'http_client/errors'
+require 'http_api_client/errors'
 
-module HttpClient
+module HttpApiClient
   module Errors
 
     describe BaseError do

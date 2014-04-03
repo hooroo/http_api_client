@@ -1,6 +1,6 @@
-require 'http_client/rails_params_encoder'
+require 'http_api_client/rails_params_encoder'
 
-module HttpClient
+module HttpApiClient
   class ConnectionFactory
 
     OSX_CERT_PATH = '/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt'
@@ -32,7 +32,7 @@ module HttpClient
     def connection_options
       options = { url: "#{config.protocol}://#{config.server}" }
       options.merge!(ssl_config) if config.protocol == 'https'
-      options.merge!({ request: { params_encoder: HttpClient.params_encoder } }) if {}.respond_to?(:to_query)
+      options.merge!({ request: { params_encoder: HttpApiClient.params_encoder } }) if {}.respond_to?(:to_query)
       options
     end
 

@@ -1,15 +1,15 @@
 # encoding: utf-8
 
-require 'http_client/timed_result'
+require 'http_api_client/timed_result'
 
-module HttpClient
+module HttpApiClient
 
   describe TimedResult do
 
     context 'without extra log data' do
 
       let(:request_id) { 'abc-123' }
-      let(:logger) { HttpClient.logger }
+      let(:logger) { HttpApiClient.logger }
 
       before do
         TimedResult.stub(:millis_since).and_return 1000

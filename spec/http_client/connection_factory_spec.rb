@@ -2,10 +2,10 @@
 
 # require 'spec_helper'
 
-require 'http_client/connection_factory'
-require 'http_client/config'
+require 'http_api_client/connection_factory'
+require 'http_api_client/config'
 
-module HttpClient
+module HttpApiClient
 
   describe ConnectionFactory do
 
@@ -17,7 +17,7 @@ module HttpClient
 
     context "without ssl" do
 
-      let(:config_file) { 'spec/config/http_clients.yml' }
+      let(:config_file) { 'spec/config/http_api_clients.yml' }
 
       it "creates a connection based on config" do
         expect(connection.url_prefix.to_s).to eq 'http://test-server/'
@@ -32,7 +32,7 @@ module HttpClient
 
       context 'when a self-signed certificate authority is specified' do
 
-        let(:config_file) { 'spec/config/http_clients_with_self_signed_cert.yml' }
+        let(:config_file) { 'spec/config/http_api_clients_with_self_signed_cert.yml' }
 
         it "creates a connection based on config" do
           expect(connection.url_prefix.to_s).to eq 'https://test-server/'
@@ -45,7 +45,7 @@ module HttpClient
 
       context 'when the machine is OSX' do
 
-        let(:config_file) { 'spec/config/http_clients_with_ssl.yml' }
+        let(:config_file) { 'spec/config/http_api_clients_with_ssl.yml' }
 
         before { connection_factory.stub(osx?: true) }
 
@@ -60,7 +60,7 @@ module HttpClient
 
       context 'when the machine is not OSX' do
 
-        let(:config_file) { 'spec/config/http_clients_with_ssl.yml' }
+        let(:config_file) { 'spec/config/http_api_clients_with_ssl.yml' }
 
         before { connection_factory.stub(osx?: false) }
 
@@ -78,7 +78,7 @@ module HttpClient
 
       context 'when auth is not specified' do
 
-        let(:config_file) { 'spec/config/http_clients.yml' }
+        let(:config_file) { 'spec/config/http_api_clients.yml' }
 
         it 'does not set the auth on the connection' do
           expect(connection.headers[:Authorization]).to be_nil
@@ -87,7 +87,7 @@ module HttpClient
 
       context 'when auth is specified' do
 
-        let(:config_file) { 'spec/config/http_clients_with_basic_auth.yml' }
+        let(:config_file) { 'spec/config/http_api_clients_with_basic_auth.yml' }
 
         it 'sets the auth on the connection' do
           expect(connection.headers[:Authorization]).to_not be_nil
