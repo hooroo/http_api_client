@@ -134,7 +134,7 @@ module HttpApiClient
 
     def get_headers
       {
-        'Accept' => 'application/json',
+        'Accept' => 'application/json'
       }
     end
 
@@ -144,16 +144,6 @@ module HttpApiClient
         'Content-Type' => 'application/json'
       }
     end
-
-
-
-    # def params_encoder
-    #   if HttpApiClient::rails_loaded?
-    #     RailsParamsEncoder
-    #   else
-
-    #   end
-    # end
 
   end
 end
