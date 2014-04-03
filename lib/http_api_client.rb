@@ -21,12 +21,19 @@ module HttpApiClient
   end
 
   def self.logger
-    if rails
+    if @logger
+      @logger
+    elsif rails
       rails.logger
     else
       puts 'Logger not defined, using stub logger that does nothing. Set logger via HttpApiClient.logger = my_logger'
       StubLogger
     end
+  end
+
+  #Allow it to be injected on app startup. Eg. if using log4r etc
+  def self.logger=(logger)
+    @logger = logger
   end
 
   def self.params_encoder

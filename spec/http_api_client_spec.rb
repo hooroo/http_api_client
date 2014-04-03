@@ -2,6 +2,16 @@ require 'http_api_client'
 
 describe HttpApiClient do
 
+  context "with an injected logger" do
+    describe ".logger" do
+      it "uses the injected logger" do
+        HttpApiClient.logger = "my logger"
+        expect(HttpApiClient.logger).to eq "my logger"
+        HttpApiClient.logger = nil
+      end
+    end
+  end
+
   context "without rails" do
 
     describe ".env" do
