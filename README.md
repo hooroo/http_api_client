@@ -141,3 +141,11 @@ This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
 ## TODO:
 
 * Consider enforcing an SSL connection when using HTTP Basic Auth
+
+## Release Notes
+
+### 0.1.0 - 2014-04-03
+* Initial release
+
+### 0.1.1 - 2014-04-04
+* Allow logger to be injected
