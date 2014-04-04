@@ -149,3 +149,7 @@ This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
 
 ### 0.1.1 - 2014-04-04
 * Allow logger to be injected
+
+### 0.1.2 - 2014-04-04
+* Update logging to be less generic to avoid clash with other log fields
+
