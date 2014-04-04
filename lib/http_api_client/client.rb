@@ -41,7 +41,7 @@ module HttpApiClient
 
     def get(path, query = {}, custom_headers = {})
 
-      log_data = { method: 'get', host: config.server, path: path_with_query(path, query) }
+      log_data = { method: 'get', remote_host: config.server, path: path_with_query(path, query) }
 
       response = TimedResult.time('http_api_client_request', log_data) do
         connection.get(full_path(path), with_auth(query), request_headers(get_headers, custom_headers))
@@ -52,7 +52,7 @@ module HttpApiClient
 
     def create(path, payload, custom_headers = {})
 
-      log_data = { method: 'post', host: config.server, path: full_path(path) }
+      log_data = { method: 'post', remote_host: config.server, path: full_path(path) }
 
       response = TimedResult.time('http_api_client_request', log_data) do
         connection.post(full_path(path), JSON.fast_generate(with_auth(payload)), request_headers(update_headers, custom_headers))
@@ -64,7 +64,7 @@ module HttpApiClient
     def destroy(base_path, id, custom_headers = {})
 
       path = "#{base_path}/#{id}"
-      log_data = { method: 'delete', host: config.server, path: full_path(path) }
+      log_data = { method: 'delete', remote_host: config.server, path: full_path(path) }
 
       response = TimedResult.time('http_api_client_request', log_data) do
         connection.delete(full_path(path), request_headers(update_headers, custom_headers))

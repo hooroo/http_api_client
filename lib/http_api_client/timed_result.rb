@@ -8,7 +8,7 @@ class TimedResult
 
     time = millis_since(start_time)
 
-    log_entries = ["event=#{event}"]
+    log_entries = ["event_name=#{event}"]
     log_entries << "request_id=#{Thread.current[:request_id]}" if Thread.current[:request_id]
     log_entries << "timing=#{time}"
     log_entries.concat(log_data.to_param.split('&'))
