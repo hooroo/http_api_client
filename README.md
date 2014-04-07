@@ -153,3 +153,6 @@ This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
 ### 0.1.2 - 2014-04-04
 * Update logging to be less generic to avoid clash with other log fields
 
+### 0.1.3 - 2014-04-07
+* Fix issue with adding a nil request id when a client is configured to add header to requests
+
