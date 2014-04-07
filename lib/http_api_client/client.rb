@@ -128,8 +128,12 @@ module HttpApiClient
 
     def request_headers(base_headers, custom_headers = {})
       all_headers = base_headers.merge(custom_headers)
-      all_headers.merge!({'X-Request-Id' => Thread.current[:request_id]}) if config.include_request_id_header
+      all_headers.merge!({'X-Request-Id' => Thread.current[:request_id]}) if include_request_id_header?
       all_headers
+    end
+
+    def include_request_id_header?
+      config.include_request_id_header && Thread.current[:request_id] != nil
     end
 
     def get_headers

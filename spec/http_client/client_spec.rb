@@ -140,15 +140,30 @@ module HttpApiClient
 
       let(:client) { Client.new(:my_client, 'spec/config/http_api_clients_with_request_id.yml') }
 
-      let(:request_id) { 'abc-123' }
+      context "with a request id in current thread" do
 
-      before do
-        Thread.current[:request_id] = request_id
+        let(:request_id) { 'abc-123' }
+
+        before do
+          Thread.current[:request_id] = request_id
+        end
+
+        it "adds the Request-Id header to the request" do
+          connection.should_receive(:get).with('/test-base-uri/path/1', {}, base_get_headers.merge('X-Request-Id' => request_id))
+          client.find('/path', 1)
+        end
       end
 
-      it "adds the Request-Id header to the request" do
-        connection.should_receive(:get).with('/test-base-uri/path/1', {}, base_get_headers.merge('X-Request-Id' => request_id))
-        client.find('/path', 1)
+      context "without a request id in current thread" do
+
+        before do
+          Thread.current[:request_id] = nil
+        end
+
+        it "does not add the Request-Id header to the request" do
+          connection.should_receive(:get).with('/test-base-uri/path/1', {}, base_get_headers)
+          client.find('/path', 1)
+        end
       end
     end
 
