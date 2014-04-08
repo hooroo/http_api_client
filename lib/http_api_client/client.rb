@@ -43,7 +43,7 @@ module HttpApiClient
 
       log_data = { method: 'get', remote_host: config.server, path: path_with_query(path, query) }
 
-      response = TimedResult.time('http_api_client_request', log_data) do
+      response = HttpApiClient.metrics.time('http_api_client_request', log_data) do
         connection.get(full_path(path), with_auth(query), request_headers(get_headers, custom_headers))
       end
 
@@ -54,7 +54,7 @@ module HttpApiClient
 
       log_data = { method: 'post', remote_host: config.server, path: full_path(path) }
 
-      response = TimedResult.time('http_api_client_request', log_data) do
+      response = HttpApiClient.metrics.time('http_api_client_request', log_data) do
         connection.post(full_path(path), JSON.fast_generate(with_auth(payload)), request_headers(update_headers, custom_headers))
       end
 
@@ -66,7 +66,7 @@ module HttpApiClient
       path = "#{base_path}/#{id}"
       log_data = { method: 'delete', remote_host: config.server, path: full_path(path) }
 
-      response = TimedResult.time('http_api_client_request', log_data) do
+      response = HttpApiClient.metrics.time('http_api_client_request', log_data) do
         connection.delete(full_path(path), request_headers(update_headers, custom_headers))
       end
 

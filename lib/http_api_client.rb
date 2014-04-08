@@ -31,9 +31,20 @@ module HttpApiClient
     end
   end
 
-  #Allow it to be injected on app startup. Eg. if using log4r etc
   def self.logger=(logger)
     @logger = logger
+  end
+
+  def self.metrics
+    if @metrics
+      @metrics
+    else
+      StubMetrics
+    end
+  end
+
+  def self.metrics=(metrics)
+    @metrics = metrics
   end
 
   def self.params_encoder
@@ -71,4 +82,12 @@ module HttpApiClient
     end
 
   end
+
+  class StubMetrics
+
+    def self.time(event_name, data, &block)
+      yield
+    end
+  end
+
 end
