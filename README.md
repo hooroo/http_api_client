@@ -159,3 +159,6 @@ This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
 ### 0.1.4 - 2014-04-07
 * Don't url encode log values
 
+### 0.1.5 - 2014-04-08
+* Logging and metrics are separate concerns and both are injectable
+
