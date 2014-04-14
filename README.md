@@ -162,3 +162,8 @@ This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
 ### 0.1.5 - 2014-04-08
 * Logging and metrics are separate concerns and both are injectable
 
+### 0.2.0 - 2014-04-08
+* 422's are now treated as exceptional which allows much easier use of http_api_client when not using Hooroo Api Tools. This moved some responsibility away from http_api_client into HoorooApiTools
+
+### 0.2.1 - 2014-04-08
+* A couple of code cleanup actions
