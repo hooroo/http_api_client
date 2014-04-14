@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require 'http_api_client/timed_result'
+require 'http_api_client'
 
 module HttpApiClient
 
