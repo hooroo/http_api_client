@@ -88,7 +88,7 @@ module HttpApiClient
     end
 
     def handle_response(response, method, path)
-      if ok?(response) || validation_failed?(response)
+      if ok?(response)
         if response.body
           #Don't use regular load method - any strings starting with ':' ( :-)  from example) will be interpreted as a symbol
           Oj.strict_load(response.body)

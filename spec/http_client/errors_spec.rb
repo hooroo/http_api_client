@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 
 require 'http_api_client/errors'
 
@@ -30,6 +32,20 @@ module HttpApiClient
         expect(error.message).to include "nested_message"
       end
 
+    end
+    describe UnprocessableEntity do
+      let(:exception) {described_class.new(message,Oj.dump(response_body))}
+      let(:response_body) {{'some' => 'json thing'}}
+      let(:message) { 'this is a message that is really informative and stuff and junk'}
+
+      it "is a BaseError" do
+        expect(exception).to be_a_kind_of(BaseError)
+      end
+      describe "#as_json" do
+        it "returns the response_body parsed" do
+          expect(exception.as_json).to eq(response_body)
+        end
+      end
     end
   end
 end

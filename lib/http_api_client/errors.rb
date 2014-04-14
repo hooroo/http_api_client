@@ -1,4 +1,5 @@
-require 'http_api_client'
+# encoding: utf-8
+require 'oj'
 
 module HttpApiClient
 
@@ -19,7 +20,7 @@ module HttpApiClient
         messages = [@message]
         messages << nested_error.message if nested_error
         messages << response_body
-        messages.join("\n\n")
+        messages.join(", ")
       end
 
     end
@@ -33,7 +34,11 @@ module HttpApiClient
     class NotAcceptable < BaseError ; end
     class RequestTimeout < BaseError ; end
     class UnknownStatus < BaseError ; end
-    class UnprocessableEntity < BaseError ; end
+    class UnprocessableEntity < BaseError
+      def as_json
+        Oj.load(response_body)
+      end
+    end
     class TooManyRequests < BaseError ; end
 
     #500 Range

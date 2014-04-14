@@ -54,6 +54,50 @@ module HttpApiClient
 
     describe "#create" do
 
+      shared_examples "#create" do
+        let(:response_double) {double('post response', body: response_json, status: status)}
+        let(:response_json) {{'this' => 'that'}.to_json}
+        context "when the post returns a valid response" do
+          let(:status) {200}
+          it "calls http connection with post and correct url and post data" do
+            connection.should_receive(:post).with('/test-base-uri/path', JSON.fast_generate(payload), base_update_headers).and_return(response_double)
+            expect(client.create('/path', payload)).to eq(JSON.parse(response_json))
+          end
+        end
+        context "when the post returns a 422 response" do
+          let(:status) {422}
+          before do
+            connection.should_receive(:post).with('/test-base-uri/path', JSON.fast_generate(payload), base_update_headers).and_return(response_double)
+          end
+          it "returns a UnprocessableEntity exception" do
+            expect{client.create('/path', payload)}.to raise_error(Errors::UnprocessableEntity)
+          end
+          it "has the correct response data" do
+            begin
+              client.create('/path', payload)
+            rescue Errors::BaseError => e
+              expect(e.response_body).to eq(response_json)
+            end
+          end
+        end
+        context "when the post returns an error response" do
+          let(:status) {500}
+          before do
+            connection.should_receive(:post).with('/test-base-uri/path', JSON.fast_generate(payload), base_update_headers).and_return(response_double)
+          end
+          it "returns a InternalServerError exception" do
+            expect{client.create('/path', payload)}.to raise_error(Errors::InternalServerError)
+          end
+          it "has the correct response data" do
+            begin
+              client.create('/path', payload)
+            rescue Errors::BaseError => e
+              expect(e.response_body).to eq(response_json)
+            end
+          end
+        end
+      end
+
       context "with auth params" do
         let(:client) do
           klass = Class.new(Client) do
@@ -63,18 +107,15 @@ module HttpApiClient
           end
           klass.new(:my_client, 'spec/config/http_api_clients_with_basic_auth.yml')
         end
-
-        it "calls http connection with post and correct url and post data" do
-          payload = { text: "hello", :key => 'one' }
-          connection.should_receive(:post).with('/test-base-uri/path', JSON.fast_generate(payload), base_update_headers)
-          client.create('/path', payload)
+        it_behaves_like "#create" do
+          let(:payload) {{ text: "hello", :key => "one"}}
         end
       end
 
-      it "calls http connection with post and correct url and post data" do
-        payload = { text: "hello"}
-        connection.should_receive(:post).with('/test-base-uri/path', JSON.fast_generate(payload), base_update_headers)
-        client.create('/path', payload)
+      context "without auth params" do
+        it_behaves_like "#create" do
+          let(:payload) {{ text: "hello"}}
+        end
       end
 
     end
