@@ -167,3 +167,6 @@ This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
 
 ### 0.2.1 - 2014-04-08
 * A couple of code cleanup actions
+
+### 0.2.2 - 2014-04-08
+* TimedResult class is now no longer in the global namespace. It is in the HttpApiClient namespace now. Fixes problems with name collisions
