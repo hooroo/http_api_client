@@ -36,7 +36,7 @@ module HttpApiClient
     class UnknownStatus < BaseError ; end
     class UnprocessableEntity < BaseError
       def as_json
-        Oj.load(response_body)
+        Oj.strict_load(response_body)
       end
     end
     class TooManyRequests < BaseError ; end
