@@ -6,7 +6,7 @@ require 'http_api_client/version'
 Gem::Specification.new do |spec|
   spec.name          = 'http_api_client'
   spec.version       = HttpApiClient::VERSION
-  spec.authors       = ['Rob Monie', 'Andrei Miulescu', 'Stuart Liston', 'Chris Rhode']
+  spec.authors       = ['Rob Monie', 'Andrei Miulescu', 'Stuart Liston', 'Chris Rode']
   spec.email         = ['robmonie@gmail.com']
   spec.description   = %q{Http client wrapper for simplified api access}
   spec.summary       = %q{}
