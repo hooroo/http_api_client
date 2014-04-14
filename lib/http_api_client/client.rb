@@ -107,10 +107,6 @@ module HttpApiClient
       Integer(response.status).between?(200, 299)
     end
 
-    def validation_failed?(response)
-      Integer(response.status) == 422
-    end
-
     def full_path(path)
       path = "/#{config.base_uri}/#{path}".gsub(/\/+/, '/')
       path
