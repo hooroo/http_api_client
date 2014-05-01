@@ -138,9 +138,6 @@ SSL is supported but requires certificates for the major certificate authorities
 
 This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
 
-## Continuous Integration
-Currently running on Travis CI - https://travis-ci.org/hooroo/http_api_client
-
 ## TODO:
 
 * Consider enforcing an SSL connection when using HTTP Basic Auth
