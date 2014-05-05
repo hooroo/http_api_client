@@ -7,7 +7,6 @@ require 'oj'
 require 'http_api_client'
 require 'http_api_client/errors'
 require 'http_api_client/connection_factory'
-require 'http_api_client/timed_result'
 
 module HttpApiClient
   class Client
