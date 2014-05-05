@@ -90,15 +90,28 @@ module HttpApiClient
     def handle_response(response, method, path)
       if ok?(response)
         if response.body
-          #Don't use regular load method - any strings starting with ':' ( :-)  from example) will be interpreted as a symbol
-          Oj.strict_load(response.body)
+          begin
+            #Don't use regular load method - any strings starting with ':' ( :-)  from example) will be interpreted as a symbol
+            Oj.strict_load(response.body)
+
+          rescue Oj::ParseError => e
+
+            HttpApiClient.logger.error(
+              error_class: 'OJ::ParseError',
+              message: e.message,
+              backtrace: e.backtrace,
+              json: response.body
+              )
+
+            raise e
+          end
         else
           true
         end
       else
         error_class = error_for_status(response.status)
         message = "#{response.status} #{method}: #{path}"
-        HttpApiClient.logger.warn("Http Client #{error_class}: #{message}")
+        HttpApiClient.logger.info("Http Client #{error_class}: #{message}")
         raise error_class.new(message, response.body)
       end
     end

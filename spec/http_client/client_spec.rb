@@ -138,7 +138,7 @@ module HttpApiClient
     describe "response status code handling" do
 
       context "with a response with a status code in the 200 range" do
-        let(:response) { double('response', :body => '{"id": 1}', status: 200) }
+        let(:get_response) { double('response', :body => '{"id": 1}', status: 200) }
 
         describe "response" do
           it "returns expected response body as hash" do
@@ -169,6 +169,34 @@ module HttpApiClient
       end
 
     end
+
+   describe 'response parsing' do
+
+    let(:get_response) { double('response', :body => json, status: 200) }
+
+    context 'with a valid json response' do
+
+      let(:json) { '{"id": 1}' }
+
+      it 'returns the json as a ruby hash' do
+        response = client.find('/path', 1)
+        expect(response['id']).to eq 1
+      end
+
+    end
+
+    context 'with and invalid json response' do
+
+      let(:json) { 'invalid json' }
+
+      it 'logs and re-raises error' do
+        HttpApiClient.logger.should_receive(:error)
+        lambda { client.find('/path', 1) }.should raise_error(Oj::ParseError)
+      end
+
+    end
+
+   end
 
     context 'without request id tracking configured' do
       it "does not add the Request-Id header to the request" do
