@@ -174,3 +174,6 @@ This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
 ### 0.2.3 - 2014-05-05
 * Add logging for json parsing failures
 * Remove unused timed result
+
+### 0.2.4 - 2014-05-06
+* Switch to vanilla net_http rather than net_http_persistent to see if a couple of connection / response issues resolve.

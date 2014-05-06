@@ -16,7 +16,7 @@ module HttpApiClient
       Faraday.new(connection_options) do |connection|
         connection.port = config.port if config.port
         connection.request   :url_encoded    # form-encode POST params
-        connection.adapter   :net_http_persistent
+        connection.adapter   :net_http
         # connection.use     :http_cache
         # connection.response  :logger
 
