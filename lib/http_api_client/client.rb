@@ -54,7 +54,7 @@ module HttpApiClient
       log_data = { method: 'post', remote_host: config.server, path: full_path(path) }
 
       response = HttpApiClient.metrics.time('http_api_client_request', log_data) do
-        connection.post(full_path(path), JSON.fast_generate(with_auth(payload)), request_headers(update_headers, custom_headers))
+        connection.post(full_path(path), JSON.fast_generate(with_auth(payload).as_json), request_headers(update_headers, custom_headers))
       end
 
       handle_response(response, :post, path)
