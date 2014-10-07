@@ -180,3 +180,6 @@ This will install `/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt`
 
 ### 0.2.5 - 2014-06-13
 * Allow for earlier version of faraday
+
+### 0.2.6 - 2014-10-07
+* Convert hash contents (dates etc) to correct JSON format before sending over the wire.
