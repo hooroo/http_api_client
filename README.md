@@ -119,8 +119,7 @@ client.find_all(base_path, query = {})
 ```
 
 #### Request Id Tracking
-In order to provide a common request id from api call to the service provider for the purposes of monitoring, a Request-Id header can be
-added to all requests. In order to do this, the following config options is required:
+In order to provide a common request id from api call to the service provider for the purposes of monitoring, a Request-Id header can be added to all requests. In order to do this, the following config options is required:
 
 `include_request_id_header: true`
 
@@ -128,7 +127,13 @@ In addition to this, your client code should have set a thread local variable ke
 
 Eg: `Thread.current[:request_id] = request_id`
 
-With these in place, a request header will be added to the http request which can then be picked up and logged throughout the service provider application code.
+With these in place, a request header (X-Request-Id) will be added to the http request which can then be picked up and logged throughout the service provider application code.
+
+Another option, with a use intended for tracking across asynchronous processes is the correlation_id.
+
+`include_correlation_id_header: true`
+
+This will work in the same way, allowing the correlation id to be passed via the X-Correlation-Id header.
 
 ## SSL Support
 
