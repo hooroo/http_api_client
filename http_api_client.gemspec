@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency 'rspec', '~> 2.14'
   spec.add_development_dependency 'pry', '~> 0.9'
-  spec.add_development_dependency 'pry-debugger', '~> 0.2'
+  spec.add_development_dependency 'pry-debugger', '~> 0.2.3'
 
   spec.add_dependency 'activesupport', '>= 3.1'
   spec.add_dependency 'faraday', '>= 0.8.9'
