@@ -54,7 +54,7 @@ module HttpApiClient
         end
 
         it "sets the ssl options" do
-          expect(connection.ssl.ca_file).to eq ConnectionFactory::OSX_CERT_PATH
+          expect(Array(ConnectionFactory::OSX_CERT_PATH)).to include(connection.ssl.ca_file)
         end
       end
 

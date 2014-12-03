@@ -3,7 +3,7 @@ require 'http_api_client/rails_params_encoder'
 module HttpApiClient
   class ConnectionFactory
 
-    OSX_CERT_PATH = '/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt'
+    OSX_CERT_PATH = ['/usr/local/etc/openssl/cert.pem', '/usr/local/opt/curl-ca-bundle/share/ca-bundle.crt']
 
     attr_reader :config
 
@@ -47,8 +47,9 @@ module HttpApiClient
     end
 
     def osx_ssl_ca_file
-      if File.exists?(OSX_CERT_PATH)
-         OSX_CERT_PATH
+      certs = Array(OSX_CERT_PATH).select { |path| File.exists?(path) }
+      if !certs.empty?
+        certs.first
       else
         raise "Unable to load certificate authority file at #{OSX_CERT_PATH}. Try `brew install curl-ca-bundle`"
       end
