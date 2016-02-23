@@ -1,5 +1,6 @@
 # coding: utf-8
 
+require 'erb'
 require 'yaml'
 require 'ostruct'
 require 'http_api_client'
@@ -30,7 +31,8 @@ module HttpApiClient
     end
 
     def config_for(config_file, environment)
-      all_config = YAML.load_file(config_file)
+      loaded_file = ERB.new(File.read(config_file)).result
+      all_config = YAML.load(loaded_file)
       env_config = all_config[environment]
       if env_config
         env_config
