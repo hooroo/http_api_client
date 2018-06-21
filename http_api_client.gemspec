@@ -27,6 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport', '>= 3.1'
   spec.add_dependency 'faraday', '>= 0.8.9'
   # spec.add_dependency 'net-http-persistent', '~> 2.9'
-  spec.add_dependency 'oj', '~> 2.7'
+  spec.add_dependency 'oj', '~> 3.6'
 
 end
